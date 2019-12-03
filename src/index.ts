@@ -240,6 +240,17 @@ export class Money implements MoneyValue {
     return `${this.amount.toFixed(this.currency.exponent)} ${this.currency}`;
   }
 
+  formatAmount(
+    decimalSeparator = ',',
+    groupSeparator = '\xA0', // figure space
+    minusSign = '\u2212'): string {
+    const [value, decimals] = this.amount.abs().toFixed(this.currency.exponent).split('.');
+
+    return (this.amount.isNegative() ? minusSign : '') +
+      value.replace(/\d(?=(\d{3})+$)/g, '$&' + groupSeparator) +
+      (decimals ? decimalSeparator + decimals : '');
+  }
+
   equals(another: any) {
     if (another === undefined || another === null) {
       return false;

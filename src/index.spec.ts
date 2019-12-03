@@ -288,4 +288,61 @@ describe('Money', () => {
       expect(money.toString()).to.eq('12.30 EUR');
     });
   });
+
+  describe('formatAmount', () => {
+    it('should format the amount without currency symbol', () => {
+      const value = new Money({amount: '10.14', currency: EUR});
+      expect(value.formatAmount()).to.eq('10,14');
+    });
+
+    it('should use figure space as the default group separator', () => {
+      const value = new Money({amount: '2310.14', currency: EUR});
+      expect(value.formatAmount()).to.eq('2\xA0310,14');
+    });
+
+    it('should use the group separator also with larger values', () => {
+      const value = new Money({amount: '4645231.00', currency: EUR});
+      expect(value.formatAmount()).to.eq('4\xA0645\xA0231,00');
+    });
+
+    it('should separate groups with zero exponent', () => {
+      const value = new Money({amount: 2310, currency: {code: 'XTS', exponent: 0}});
+      expect(value.formatAmount()).to.eq('2\xA0310');
+    });
+
+    it('should format the minus sign', () => {
+      const value = new Money({amount: '-1.00', currency: EUR});
+      expect(value.formatAmount()).to.eq('\u22121,00');
+    });
+
+    it('should print all decimals', () => {
+      const money = Money.valueOf({amount: 7, currency: EUR});
+      expect(money.formatAmount()).to.eq('7,00');
+    });
+
+    it('should format rounded amount', () => {
+      const money = Money.valueOf({amount: '1.1666666666666666667', currency: EUR});
+      expect(money.formatAmount()).to.eq('1,17');
+    });
+
+    it('should format amount with large exponent', () => {
+      const money = Money.valueOf({amount: 15, currency: {code: 'XTS', exponent: 8}});
+      expect(money.formatAmount()).to.eq('15,00000000');
+    });
+
+    it('should format amount with zero exponent', () => {
+      const money = Money.valueOf({amount: 120, currency: {code: 'XTS', exponent: 0}});
+      expect(money.formatAmount()).to.eq('120');
+    });
+
+    it('should format the amount with custom decimal separator', () => {
+      const value = new Money({amount: '10.14', currency: EUR});
+      expect(value.formatAmount('.')).to.eq('10.14');
+    });
+
+    it('should use a custom group separator', () => {
+      const value = new Money({amount: '2310.14', currency: EUR});
+      expect(value.formatAmount(',', '.')).to.eq('2.310,14');
+    });
+  });
 });
