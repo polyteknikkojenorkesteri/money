@@ -1,4 +1,4 @@
-import {Currency, CurrencyError, DKK, EUR, InvalidCurrencyError, Index, USD} from './money';
+import {Currency, CurrencyError, DKK, EUR, InvalidCurrencyError, Index, USD} from './index';
 import {expect} from 'chai';
 
 describe('Currency', () => {
