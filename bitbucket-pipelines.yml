@@ -1,0 +1,15 @@
+image: node:10.15.3
+
+pipelines:
+  default:
+    - step:
+        name: Test
+        caches:
+          - node
+        script:
+          - npm install
+          - npm test
+          - npm run lint
+          - npm run build
+        artifacts:
+          - dist/**
