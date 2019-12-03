@@ -18,7 +18,7 @@ export interface MoneyValue {
 }
 
 export interface NumberMap {[s: string]: number}
-export interface MoneyMap {[s: string]: Money}
+export interface MoneyMap {[s: string]: Index}
 
 /**
  * An internal cache for Currency.valueOf()
@@ -107,7 +107,7 @@ export class CurrencyError extends Error {
  * Similar to https://github.com/macor161/ts-money but with a more convenient API for our purposes.
  * Implementation is based on decimal.js.
  */
-export class Money implements MoneyValue {
+export class Index implements MoneyValue {
   readonly amount: Decimal;
 
   /**
@@ -124,42 +124,42 @@ export class Money implements MoneyValue {
     this.amount = new Decimal(value.amount).toDecimalPlaces(this.currency.exponent);
   }
 
-  static valueOf(value: MoneyValue): Money {
-    if (value instanceof Money) {
+  static valueOf(value: MoneyValue): Index {
+    if (value instanceof Index) {
       return value;
     }
 
-    return new Money(value);
+    return new Index(value);
   }
 
   isZero(): boolean {
     return this.amount.isZero();
   }
 
-  plus(value: MoneyValue): Money {
-    const another = Money.valueOf(value);
+  plus(value: MoneyValue): Index {
+    const another = Index.valueOf(value);
     this.checkSameCurrency(another);
 
     return this.withAmount(this.amount.plus(another.amount));
   }
 
-  minus(value: MoneyValue): Money {
-    const another = Money.valueOf(value);
+  minus(value: MoneyValue): Index {
+    const another = Index.valueOf(value);
     this.checkSameCurrency(another);
 
     return this.withAmount(this.amount.minus(another.amount));
   }
 
-  mul(multiplier: string | number | Decimal): Money {
+  mul(multiplier: string | number | Decimal): Index {
     return this.withAmount(this.amount.mul(multiplier));
   }
 
-  div(divider: string | number | Decimal): Money {
+  div(divider: string | number | Decimal): Index {
     return this.withAmount(this.amount.div(divider));
   }
 
-  convertTo(currency: string | CurrencyDefinition, rate: string | number | Decimal): Money {
-    return new Money({
+  convertTo(currency: string | CurrencyDefinition, rate: string | number | Decimal): Index {
+    return new Index({
       amount: this.amount.mul(rate).toFixed(this.currency.exponent),
       currency: currency
     });
@@ -267,8 +267,8 @@ export class Money implements MoneyValue {
    *
    * @param amount
    */
-  private withAmount(amount: string | number | Decimal): Money {
-    return Money.valueOf({
+  private withAmount(amount: string | number | Decimal): Index {
+    return Index.valueOf({
       amount: amount,
       currency: this.currency
     });
