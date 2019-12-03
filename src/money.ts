@@ -106,8 +106,6 @@ export class CurrencyError extends Error {
  *
  * Similar to https://github.com/macor161/ts-money but with a more convenient API for our purposes.
  * Implementation is based on decimal.js.
- *
- * TODO: Consider moving this code to a reusable library
  */
 export class Money implements MoneyValue {
   readonly amount: Decimal;
