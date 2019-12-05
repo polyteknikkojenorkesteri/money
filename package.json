@@ -8,6 +8,10 @@
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
     "lint": "tslint --project tslint.json"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/polyteknikkojenorkesteri/podger-money.git"
+  },
   "private": true,
   "dependencies": {
     "decimal.js": "^10.2.0"
