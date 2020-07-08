@@ -1,4 +1,4 @@
-# Podger Money
+# Money
 
 This project provides a `Money` class to tackle several challanges related to handling money in code. First, it avoids using floats because of rounding errors. Second, it checks that currencies are never mixed. Third, it uses an allocation algorithm to ensure that no cents are lost in allocations and currency conversions.
 
