@@ -1,5 +1,7 @@
 # Money
 
+![.github/workflows/ci.yaml](https://github.com/polyteknikkojenorkesteri/money/workflows/.github/workflows/ci.yaml/badge.svg)
+
 This project provides a `Money` class to tackle several challanges related to handling money in code. First, it avoids using floats because of rounding errors. Second, it checks that currencies are never mixed. Third, it uses an allocation algorithm to ensure that no cents are lost in allocations and currency conversions.
 
 This class is based on Martin Fowler's [Money Pattern](https://martinfowler.com/eaaCatalog/money.html), see Fowler, M. (2003) Patterns of Enterprise Application Architecture, pp. 488–495. The borrowed allocation algorithm was improved to take rounding rules into account and to distribute remainders more evenly, where Fowler's version would build up leftovers always on the oldest assets. This makes a difference when we calculate the accumulated allocations over several decades.
