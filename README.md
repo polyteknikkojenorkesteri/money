@@ -10,7 +10,7 @@ Our `Money` class is similar to [ts-money](https://github.com/macor161/ts-money)
 
 ## Development
 
-It works at least on Node.js 10 runtime, and should also work on newer versions of Node.js as well.
+It works at least on Node.js 12 runtime, and should also work on newer versions of Node.js as well.
 
 ### Unit Tests
 
