@@ -1,19 +1,18 @@
 {
   "name": "@polyteknikkojenorkesteri/money",
   "version": "1.0.0",
-  "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build:commonjs && npm run build:esm",
+    "build:commonjs": "tsc",
+    "build:esm": "tsc -p tsconfig.esm.json",
     "prepare": "npm run build",
-    "test": "mocha -r esm -r ts-node/register src/**/*.spec.ts",
+    "test": "mocha -r ts-node/register src/**/*.spec.ts",
     "lint": "tslint --project tslint.json"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/polyteknikkojenorkesteri/money.git"
-  },
+  "repository": "github:polyteknikkojenorkesteri/money",
   "private": true,
   "dependencies": {
     "decimal.js": "^10.2.0"
@@ -22,7 +21,6 @@
     "@types/chai": "^4.2.11",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
-    "esm": "^3.2.25",
     "mocha": "^8.0.1",
     "ts-node": "^8.10.2",
     "tslint": "^5.12.1",
