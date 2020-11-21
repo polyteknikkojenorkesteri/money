@@ -153,6 +153,14 @@ describe('Money', () => {
   });
 
   describe('allocate', () => {
+    describe('empty ratios', () => {
+      const money = Money.valueOf({amount: '10.00', currency: 'EUR'});
+
+      it('should throw error', () => {
+        expect(() => money.allocate({})).to.throw('No ratios defined');
+      });
+    });
+
     describe('one ratio', () => {
       const money = Money.valueOf({amount: '10.00', currency: 'EUR'});
       const allocations = money.allocate({

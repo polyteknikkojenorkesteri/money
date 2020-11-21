@@ -173,7 +173,8 @@ export class Money implements MoneyValue {
    * @param ratios mapped by keys that also map corresponding allocations in the result
    */
   allocate(ratios: NumberMap): MoneyMap {
-    const sumOfRatios = Object.values(ratios).reduce((acc, ratio) => acc + ratio);
+    const sumOfRatios = Object.values(ratios)
+      .reduce((acc, ratio) => acc + ratio, 0);
 
     if (sumOfRatios === 0) {
       if (!this.isZero()) {
