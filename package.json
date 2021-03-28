@@ -14,6 +14,9 @@
   },
   "repository": "github:polyteknikkojenorkesteri/money",
   "private": true,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "dependencies": {
     "decimal.js": "^10.2.1"
   },
