@@ -13,7 +13,6 @@
     "lint": "tslint --project tslint.json"
   },
   "repository": "github:polyteknikkojenorkesteri/money",
-  "private": true,
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
