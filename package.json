@@ -20,6 +20,9 @@
   "files": [
     "/dist"
   ],
+  "engines": {
+    "node": ">=14"
+  },
   "dependencies": {
     "decimal.js": "^10.3.1"
   },
