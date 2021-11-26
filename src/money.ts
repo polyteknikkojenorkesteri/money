@@ -155,7 +155,7 @@ export class Money implements MoneyValue {
     }, {});
   }
 
-  toJSON(): MoneyValue {
+  toJSON() {
     return {
       amount: this.amount.toFixed(this.currency.exponent),
       currency: this.currency.toString(),
