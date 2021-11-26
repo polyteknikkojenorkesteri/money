@@ -6,7 +6,7 @@ This project provides a `Money` class to tackle several challanges related to ha
 
 This class is based on Martin Fowler's [Money Pattern](https://martinfowler.com/eaaCatalog/money.html), see Fowler, M. (2003) Patterns of Enterprise Application Architecture, pp. 488–495. The borrowed allocation algorithm was improved to take rounding rules into account and to distribute remainders more evenly, where Fowler's version would build up leftovers always on the oldest assets. This makes a difference when we calculate the accumulated allocations over several decades.
 
-Our `Money` class is similar to [ts-money](https://github.com/macor161/ts-money) but with a more convenient API for our purposes. Internally, this implementation uses [decimal.js](https://github.com/MikeMcl/decimal.js). 
+Our `Money` class is similar to [ts-money](https://github.com/macor161/ts-money) but with a more convenient API for our purposes. Internally, this implementation uses [decimal.js](https://github.com/MikeMcl/decimal.js).
 
 ## Development
 

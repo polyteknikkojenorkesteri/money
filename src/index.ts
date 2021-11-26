@@ -1,9 +1,9 @@
-import {Decimal} from 'decimal.js';
+import { Decimal } from 'decimal.js';
 
 export class InvalidCurrencyError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'InvalidCurrencyError'
+    this.name = 'InvalidCurrencyError';
   }
 }
 
@@ -17,13 +17,17 @@ export interface MoneyValue {
   currency: string | CurrencyDefinition;
 }
 
-export interface NumberMap {[s: string]: number}
-export interface MoneyMap {[s: string]: Money}
+export interface NumberMap {
+  [s: string]: number;
+}
+export interface MoneyMap {
+  [s: string]: Money;
+}
 
 /**
  * An internal cache for Currency.valueOf()
  */
-const currencies: {[s: string]: Currency} = {};
+const currencies: { [s: string]: Currency } = {};
 
 /**
  * Represents an ISO 4217 currency.
@@ -51,7 +55,7 @@ export class Currency implements CurrencyDefinition {
 
     if (typeof value === 'string') {
       if (!currencies[value]) {
-        currencies[value] = new Currency({code: value, exponent: 2});
+        currencies[value] = new Currency({ code: value, exponent: 2 });
       }
 
       return currencies[value];
@@ -83,11 +87,26 @@ export class Currency implements CurrencyDefinition {
 
 // We could define all codes here if this was a generic library,
 // but we're not going to need them just for our purposes
-export const EUR = currencies.EUR = new Currency({code: 'EUR', exponent: 2});
-export const USD = currencies.USD = new Currency({code: 'USD', exponent: 2});
-export const FIM = currencies.FIM = new Currency({code: 'FIM', exponent: 2});
-export const DKK = currencies.DKK = new Currency({code: 'DKK', exponent: 2});
-export const JPY = currencies.JPY = new Currency({code: 'JPY', exponent: 0}); // Just to demonstrate the exponent
+export const EUR = (currencies.EUR = new Currency({
+  code: 'EUR',
+  exponent: 2,
+}));
+export const USD = (currencies.USD = new Currency({
+  code: 'USD',
+  exponent: 2,
+}));
+export const FIM = (currencies.FIM = new Currency({
+  code: 'FIM',
+  exponent: 2,
+}));
+export const DKK = (currencies.DKK = new Currency({
+  code: 'DKK',
+  exponent: 2,
+}));
+export const JPY = (currencies.JPY = new Currency({
+  code: 'JPY',
+  exponent: 0,
+})); // Just to demonstrate the exponent
 
 export class CurrencyError extends Error {
   constructor(message: string) {
@@ -121,7 +140,9 @@ export class Money implements MoneyValue {
     }
 
     this.currency = Currency.valueOf(value.currency);
-    this.amount = new Decimal(value.amount).toDecimalPlaces(this.currency.exponent);
+    this.amount = new Decimal(value.amount).toDecimalPlaces(
+      this.currency.exponent
+    );
   }
 
   static valueOf(value: MoneyValue): Money {
@@ -158,10 +179,13 @@ export class Money implements MoneyValue {
     return this.withAmount(this.amount.div(divider));
   }
 
-  convertTo(currency: string | CurrencyDefinition, rate: string | number | Decimal): Money {
+  convertTo(
+    currency: string | CurrencyDefinition,
+    rate: string | number | Decimal
+  ): Money {
     return new Money({
       amount: this.amount.mul(rate).toFixed(this.currency.exponent),
-      currency: currency
+      currency: currency,
     });
   }
 
@@ -173,8 +197,10 @@ export class Money implements MoneyValue {
    * @param ratios mapped by keys that also map corresponding allocations in the result
    */
   allocate(ratios: NumberMap): MoneyMap {
-    const sumOfRatios = Object.values(ratios)
-      .reduce((acc, ratio) => acc + ratio, 0);
+    const sumOfRatios = Object.values(ratios).reduce(
+      (acc, ratio) => acc + ratio,
+      0
+    );
 
     if (sumOfRatios === 0) {
       if (!this.isZero()) {
@@ -192,7 +218,7 @@ export class Money implements MoneyValue {
     const amountAsInt = this.amount.mul(multiplier).toNumber();
 
     // Store a rounding result for each key
-    const remainders: {[s: string]: number} = {};
+    const remainders: { [s: string]: number } = {};
 
     // Results contains the allocations as integers
     const results: NumberMap = {};
@@ -200,7 +226,7 @@ export class Money implements MoneyValue {
     let remainder = amountAsInt;
 
     for (const [key, ratio] of Object.entries(ratios)) {
-      const result = amountAsInt * ratio / sumOfRatios;
+      const result = (amountAsInt * ratio) / sumOfRatios;
       results[key] = Math.floor(result);
       remainders[key] = Math.round(result) - results[key];
       remainder -= results[key];
@@ -233,7 +259,7 @@ export class Money implements MoneyValue {
   toJSON(): MoneyValue {
     return {
       amount: this.amount.toFixed(this.currency.exponent),
-      currency: this.currency.toString()
+      currency: this.currency.toString(),
     };
   }
 
@@ -244,12 +270,18 @@ export class Money implements MoneyValue {
   formatAmount(
     decimalSeparator = ',',
     groupSeparator = '\xA0', // figure space
-    minusSign = '\u2212'): string {
-    const [value, decimals] = this.amount.abs().toFixed(this.currency.exponent).split('.');
+    minusSign = '\u2212'
+  ): string {
+    const [value, decimals] = this.amount
+      .abs()
+      .toFixed(this.currency.exponent)
+      .split('.');
 
-    return (this.amount.isNegative() ? minusSign : '') +
+    return (
+      (this.amount.isNegative() ? minusSign : '') +
       value.replace(/\d(?=(\d{3})+$)/g, '$&' + groupSeparator) +
-      (decimals ? decimalSeparator + decimals : '');
+      (decimals ? decimalSeparator + decimals : '')
+    );
   }
 
   equals(another: any) {
@@ -257,8 +289,10 @@ export class Money implements MoneyValue {
       return false;
     }
 
-    return this.amount.equals(another.amount)
-      && this.currency.equals(another.currency);
+    return (
+      this.amount.equals(another.amount) &&
+      this.currency.equals(another.currency)
+    );
   }
 
   /**
@@ -268,7 +302,9 @@ export class Money implements MoneyValue {
    */
   private checkSameCurrency(another: MoneyValue): void {
     if (!this.currency.equals(another.currency)) {
-      throw new CurrencyError(`Expected a money object with currency ${this.currency} but got ${another.currency}`);
+      throw new CurrencyError(
+        `Expected a money object with currency ${this.currency} but got ${another.currency}`
+      );
     }
   }
 
@@ -282,7 +318,7 @@ export class Money implements MoneyValue {
   private withAmount(amount: string | number | Decimal): Money {
     return Money.valueOf({
       amount: amount,
-      currency: this.currency
+      currency: this.currency,
     });
   }
 }
