@@ -3,7 +3,7 @@ import { Currency, CurrencyDefinition, CurrencyError } from './currency';
 import { isRecord } from './util';
 
 export interface MoneyValue {
-  amount: string | number | Decimal;
+  amount: string | number;
   currency: string | CurrencyDefinition;
 }
 
@@ -25,8 +25,8 @@ export interface MoneyMap {
  * Similar to https://github.com/macor161/ts-money but with a more convenient API for our purposes.
  * Implementation is based on decimal.js.
  */
-export class Money implements MoneyValue {
-  readonly amount: Decimal;
+export class Money {
+  private readonly amount: Decimal;
 
   /**
    * A three-letter ISO 4217 code.
@@ -44,7 +44,7 @@ export class Money implements MoneyValue {
     );
   }
 
-  static valueOf(value: MoneyValue): Money {
+  static valueOf(value: Money | MoneyValue): Money {
     if (value instanceof Money) {
       return value;
     }
@@ -56,31 +56,31 @@ export class Money implements MoneyValue {
     return this.amount.isZero();
   }
 
-  plus(value: MoneyValue): Money {
+  plus(value: Money | MoneyValue): Money {
     const another = Money.valueOf(value);
     this.checkSameCurrency(another);
 
-    return this.withAmount(this.amount.plus(another.amount));
+    return this.withAmount(this.amount.plus(another.amount).toString());
   }
 
-  minus(value: MoneyValue): Money {
+  minus(value: Money | MoneyValue): Money {
     const another = Money.valueOf(value);
     this.checkSameCurrency(another);
 
-    return this.withAmount(this.amount.minus(another.amount));
+    return this.withAmount(this.amount.minus(another.amount).toString());
   }
 
-  mul(multiplier: string | number | Decimal): Money {
-    return this.withAmount(this.amount.mul(multiplier));
+  mul(multiplier: string | number): Money {
+    return this.withAmount(this.amount.mul(multiplier).toString());
   }
 
-  div(divider: string | number | Decimal): Money {
-    return this.withAmount(this.amount.div(divider));
+  div(divider: string | number): Money {
+    return this.withAmount(this.amount.div(divider).toString());
   }
 
   convertTo(
     currency: string | CurrencyDefinition,
-    rate: string | number | Decimal
+    rate: string | number
   ): Money {
     return new Money({
       amount: this.amount.mul(rate).toFixed(this.currency.exponent),
@@ -155,6 +155,14 @@ export class Money implements MoneyValue {
     }, {});
   }
 
+  getAmount(): string {
+    return this.amount.toFixed(this.currency.exponent);
+  }
+
+  getAmountAsNumber(): number {
+    return this.amount.toNumber();
+  }
+
   toJSON() {
     return {
       amount: this.amount.toFixed(this.currency.exponent),
@@ -206,7 +214,7 @@ export class Money implements MoneyValue {
    *
    * @param another
    */
-  private checkSameCurrency(another: MoneyValue): void {
+  private checkSameCurrency(another: Money | MoneyValue): void {
     if (!this.currency.equals(another.currency)) {
       throw new CurrencyError(
         `Expected a money object with currency ${this.currency} but got ${another.currency}`
@@ -221,9 +229,9 @@ export class Money implements MoneyValue {
    *
    * @param amount
    */
-  private withAmount(amount: string | number | Decimal): Money {
+  private withAmount(amount: string | number): Money {
     return Money.valueOf({
-      amount: amount,
+      amount,
       currency: this.currency,
     });
   }

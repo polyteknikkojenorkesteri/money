@@ -1,18 +1,18 @@
-import { Currency, CurrencyError, DKK, EUR, USD } from './currency';
+import { Currency, CurrencyError, DKK, EUR, JPY, USD } from './currency';
 import { Money } from './money';
 
 describe('valueOf', () => {
   test('rounds the amount to the correct number of decimals', () => {
     const eur3 = Currency.valueOf({ code: 'EUR', exponent: 3 });
     const money = Money.valueOf({ amount: 3.1415926536, currency: eur3 });
-    expect(money.amount.toString()).toBe('3.142');
+    expect(money.getAmount()).toBe('3.142');
   });
 });
 
 describe('plus', () => {
   test('adds amounts', () => {
     const money = Money.valueOf({ amount: 1, currency: EUR });
-    expect(money.plus(money).amount.toNumber()).toBe(2);
+    expect(money.plus(money).getAmount()).toBe('2.00');
   });
 
   test('checks currencies match', () => {
@@ -25,7 +25,7 @@ describe('plus', () => {
 describe('minus', () => {
   test('subtracts amount', () => {
     const money = Money.valueOf({ amount: 1, currency: EUR });
-    expect(money.minus(money).amount.toNumber()).toBe(0);
+    expect(money.minus(money).getAmount()).toBe('0.00');
   });
 
   test('checks currencies match', () => {
@@ -38,26 +38,26 @@ describe('minus', () => {
 describe('mul', () => {
   test('multiplies the amount with the given multiplier', () => {
     const money = Money.valueOf({ amount: 7, currency: EUR });
-    expect(money.mul(1.52).amount.toString()).toBe('10.64');
+    expect(money.mul(1.52).getAmount()).toBe('10.64');
   });
 
   test('rounds the result to the correct number of decimals', () => {
     const eur3 = Currency.valueOf({ code: 'EUR', exponent: 3 });
     const money = Money.valueOf({ amount: 7, currency: eur3 });
-    expect(money.mul(3.1415926536).amount.toString()).toBe('21.991');
+    expect(money.mul(3.1415926536).getAmount()).toBe('21.991');
   });
 });
 
 describe('div', () => {
   test('divides the amount with the given divider', () => {
     const money = Money.valueOf({ amount: 6, currency: EUR });
-    expect(money.div(2).amount.toString()).toBe('3');
+    expect(money.div(2).getAmount()).toBe('3.00');
   });
 
   test('rounds the result to the correct number of decimals', () => {
     const eur3 = Currency.valueOf({ code: 'EUR', exponent: 3 });
     const money = Money.valueOf({ amount: 7, currency: eur3 });
-    expect(money.div(6).amount.toString()).toBe('1.167');
+    expect(money.div(6).getAmount()).toBe('1.167');
   });
 });
 
@@ -113,7 +113,7 @@ describe('allocate', () => {
     });
 
     test('allocates amounts according to the given ratios', () => {
-      expect(allocations['2019/001'].amount.toString()).toBe('10');
+      expect(allocations['2019/001'].getAmount()).toBe('10.00');
     });
   });
 
@@ -125,8 +125,8 @@ describe('allocate', () => {
     });
 
     test('allocates amounts according to the given ratios', () => {
-      expect(allocations['2019/001'].amount.toString()).toBe('7.14');
-      expect(allocations['2019/002'].amount.toString()).toBe('2.86');
+      expect(allocations['2019/001'].getAmount()).toBe('7.14');
+      expect(allocations['2019/002'].getAmount()).toBe('2.86');
     });
   });
 
@@ -139,9 +139,9 @@ describe('allocate', () => {
     });
 
     test('allocates amounts according to the given ratios', () => {
-      expect(allocations['2019/001'].amount.toString()).toBe('3.34');
-      expect(allocations['2019/002'].amount.toString()).toBe('3.33');
-      expect(allocations['2019/003'].amount.toString()).toBe('3.33');
+      expect(allocations['2019/001'].getAmount()).toBe('3.34');
+      expect(allocations['2019/002'].getAmount()).toBe('3.33');
+      expect(allocations['2019/003'].getAmount()).toBe('3.33');
     });
   });
 
@@ -153,8 +153,8 @@ describe('allocate', () => {
     // allocation (i.e. would result in [0: 0.34, 1: 0.66]), but our algorithm places it where
     // it would go if the amounts were rounded separately
     test('allocates the remainder per rounding rules', () => {
-      expect(allocations[0].amount.toString()).toBe('0.33');
-      expect(allocations[1].amount.toString()).toBe('0.67');
+      expect(allocations[0].getAmount()).toBe('0.33');
+      expect(allocations[1].getAmount()).toBe('0.67');
     });
   });
 
@@ -163,8 +163,8 @@ describe('allocate', () => {
     const allocations = money.allocate({ 0: 3, 1: 7 });
 
     test('puts the remainder on the first allocation', () => {
-      expect(allocations[0].amount.toString()).toBe('0.02');
-      expect(allocations[1].amount.toString()).toBe('0.03');
+      expect(allocations[0].getAmount()).toBe('0.02');
+      expect(allocations[1].getAmount()).toBe('0.03');
     });
   });
 
@@ -178,7 +178,7 @@ describe('allocate', () => {
       const money = Money.valueOf({ amount: '0.00', currency: 'EUR' });
       const allocations = money.allocate({ 0: 0 });
 
-      expect(allocations[0].amount.toString()).toBe('0');
+      expect(allocations[0].getAmount()).toBe('0.00');
     });
   });
 
@@ -187,12 +187,12 @@ describe('allocate', () => {
     const allocations = money.allocate({ 0: 0, 1: 1, 2: 2 });
 
     test('returns zero amount', () => {
-      expect(allocations[0].amount.toString()).toBe('0');
+      expect(allocations[0].getAmount()).toBe('0.00');
     });
 
     test('does not affect others', () => {
-      expect(allocations[1].amount.toString()).toBe('0.33');
-      expect(allocations[2].amount.toString()).toBe('0.67');
+      expect(allocations[1].getAmount()).toBe('0.33');
+      expect(allocations[2].getAmount()).toBe('0.67');
     });
   });
 });
@@ -206,7 +206,7 @@ describe('convert', () => {
   });
 
   test('converts with the given rate', () => {
-    expect(money2.amount.toString()).toBe('5.83');
+    expect(money2.getAmount()).toBe('5.83');
   });
 });
 
@@ -237,6 +237,33 @@ describe('equals', () => {
 
   test('value null', () => {
     expect(money.equals(null)).toBeFalsy();
+  });
+});
+
+describe('getAmount', () => {
+  test('returns a string with two decimals', () => {
+    const money = Money.valueOf({ amount: 1, currency: EUR });
+    expect(money.getAmount()).toBe('1.00');
+  });
+
+  test('returns a string with three decimals', () => {
+    const money = Money.valueOf({
+      amount: 1,
+      currency: { code: 'EUR', exponent: 3 },
+    });
+    expect(money.getAmount()).toBe('1.000');
+  });
+
+  test('returns a string with zero decimals', () => {
+    const money = Money.valueOf({ amount: 100, currency: JPY });
+    expect(money.getAmount()).toBe('100');
+  });
+});
+
+describe('getAmountAsNumber', () => {
+  test('returns a number', () => {
+    const money = Money.valueOf({ amount: 1.23, currency: EUR });
+    expect(money.getAmountAsNumber()).toBe(1.23);
   });
 });
 
