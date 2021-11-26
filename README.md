@@ -10,11 +10,23 @@ Our `Money` class is similar to [ts-money](https://github.com/macor161/ts-money)
 
 ## Development
 
-It works at least on Node.js 10 runtime, and should also work on newer versions of Node.js as well.
+Works at least on Node.js 14 runtime and newer.
 
 ### Unit Tests
 
-All the functionality is pretty much covered with unit tests written with [Mocha](https://mochajs.org/) and [Chai](https://www.chaijs.com/). Execute the tests by running `npm test`.
+Test cases use [Jest](https://jestjs.io/) framework. This project includes unit tests and integration tests.
+
+Unit tests are named after the component being tested, and the filenames end in `.test.ts`. Unit tests are put into the source directory. For example, for module `money.ts`, the tests are located in `src/money.test.js`.
+
+Tests can be run once or continuously during the development.
+
+```
+# Run once
+npm test
+
+# Watch files and run tests when the code is modified
+npm run test:watch
+```
 
 ### Build
 
@@ -24,3 +36,15 @@ Build the library by running the following commands.
 npm install
 npm run build
 ```
+
+### Code Style
+
+This repository uses [Prettier](https://prettier.io/) for automatic code formatting.
+
+Make sure all files are formatted before commit by running
+
+```
+npm run prettier
+```
+
+For the best developer experience, enable Prettier on save in your IDE.
