@@ -18,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [10, 12, 14]
+        node: [14, 16]
 
     steps:
       - name: Checkout
@@ -34,6 +34,9 @@ jobs:
 
       - name: Lint
         run: npm run lint --if-present
+
+      - name: Prettier
+        run: npx prettier --check .
 
       - name: Run Unit Tests
         run: npm test
@@ -71,6 +74,9 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Prettier
+        run: npx prettier --check .
 
       - name: Run Unit Tests
         run: npm test
