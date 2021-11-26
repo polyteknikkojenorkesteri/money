@@ -20,11 +20,13 @@ describe('valueOf', () => {
   });
 
   test('throws error on undefined', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     expect(() => Currency.valueOf(undefined)).toThrow(InvalidCurrencyError);
   });
 
   test('throws error on null', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     expect(() => Currency.valueOf(null)).toThrow(InvalidCurrencyError);
   });

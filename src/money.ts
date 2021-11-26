@@ -1,5 +1,6 @@
 import { Decimal } from 'decimal.js';
 import { Currency, CurrencyDefinition, CurrencyError } from './currency';
+import { isRecord } from './util';
 
 export interface MoneyValue {
   amount: string | number | Decimal;
@@ -182,15 +183,22 @@ export class Money implements MoneyValue {
     );
   }
 
-  equals(another: any) {
+  equals(another: unknown) {
     if (another === undefined || another === null) {
       return false;
+    } else if (another instanceof Money) {
+      return (
+        this.amount.equals(another.amount) &&
+        this.currency.equals(another.currency)
+      );
+    } else if (isRecord(another)) {
+      return (
+        this.toJSON().amount === another.amount &&
+        this.currency.equals(another.currency)
+      );
+    } else {
+      return false;
     }
-
-    return (
-      this.amount.equals(another.amount) &&
-      this.currency.equals(another.currency)
-    );
   }
 
   /**

@@ -1,3 +1,5 @@
+import { isRecord } from './util';
+
 export class InvalidCurrencyError extends Error {
   constructor(message: string) {
     super(message);
@@ -60,13 +62,15 @@ export class Currency implements CurrencyDefinition {
     return this.code;
   }
 
-  equals(another: any): boolean {
+  equals(another: unknown): boolean {
     if (another === undefined || another === null) {
       return false;
     } else if (typeof another === 'string') {
       return this.code === another;
-    } else {
+    } else if (isRecord(another)) {
       return this.code === another.code && this.exponent === another.exponent;
+    } else {
+      return false;
     }
   }
 }
