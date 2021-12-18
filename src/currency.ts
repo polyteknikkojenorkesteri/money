@@ -58,6 +58,15 @@ export class Currency implements CurrencyDefinition {
     }
   }
 
+  toJSON(): string | CurrencyDefinition {
+    return currencies[this.code] && currencies[this.code].equals(this)
+      ? this.code
+      : {
+          code: this.code,
+          exponent: this.exponent,
+        };
+  }
+
   toString(): string {
     return this.code;
   }

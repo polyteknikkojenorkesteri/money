@@ -68,3 +68,15 @@ describe('toString', () => {
     expect(currency.toString()).toBe('XTS');
   });
 });
+
+describe('toJSON', () => {
+  test('predefined currency returns string', () => {
+    const currency = Currency.valueOf('EUR');
+    expect(currency.toJSON()).toEqual('EUR');
+  });
+
+  test('other currencies return object', () => {
+    const currency = Currency.valueOf({ code: 'EUR', exponent: 3 });
+    expect(currency.toJSON()).toEqual({ code: 'EUR', exponent: 3 });
+  });
+});

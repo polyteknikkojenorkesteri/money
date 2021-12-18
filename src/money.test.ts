@@ -91,9 +91,20 @@ describe('toJSON', () => {
     expect(money.toJSON().amount).toBe('120');
   });
 
-  test('formats the currency code', () => {
+  test('returns shorthand code for predefined currencies', () => {
     const money = Money.valueOf({ amount: 4.52, currency: DKK });
     expect(money.toJSON().currency).toBe('DKK');
+  });
+
+  test('returns object for other currencies', () => {
+    const money = Money.valueOf({
+      amount: 120,
+      currency: { code: 'XTS', exponent: 0 },
+    });
+    expect(money.toJSON().currency).toEqual({
+      code: 'XTS',
+      exponent: 0,
+    });
   });
 });
 

@@ -166,7 +166,7 @@ export class Money {
   toJSON() {
     return {
       amount: this.amount.toFixed(this.currency.exponent),
-      currency: this.currency.toString(),
+      currency: this.currency.toJSON(),
     };
   }
 
