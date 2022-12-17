@@ -2,7 +2,7 @@ on:
   push:
     # Run tests
     branches:
-      - master
+      - main
 
   # Run tests for any PRs.
   pull_request:
